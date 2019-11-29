@@ -1,6 +1,6 @@
 import pytest
 
-from shared_utilities.helpers import get_best_action, choose_epsilon_greedy_action, compute_epsilon_change
+from shared_utilities.helpers import get_best_action, choose_epsilon_greedy_action, compute_epsilon_change, get_returns
 
 
 # choose_action
@@ -21,3 +21,16 @@ def test_calculationCheck():
     episode_count = 5
     assert compute_epsilon_change(episode_count=episode_count, starting_epsilon=starting_epsilon,
                                   finishing_epsilon=finishing_epsilon) == pytest.approx(0.02)
+
+
+# discount of 1
+def test_get_returns():
+    episode = [(None, None, 10), (None, None, -2), (None, None, 4)]
+    returns = get_returns(episode=episode, discount_rate=1)
+    assert returns == [12, 2, 4]
+
+
+def test_get_returns_with_discount():
+    episode = [(None, None, 10), (None, None, -2), (None, None, 4)]
+    returns = get_returns(episode=episode, discount_rate=0.9)
+    assert returns == [10 - 2 * 0.9 + 4 * 0.9 ** 2, -2 + 4 * 0.9, 4]

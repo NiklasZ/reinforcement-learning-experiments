@@ -34,3 +34,17 @@ def choose_epsilon_greedy_action(*, q_table: dict, state: int, number_of_actions
 # Calculates how much a linearly scaled epsilon should change by
 def compute_epsilon_change(*, episode_count: int, starting_epsilon: float, finishing_epsilon: float) -> float:
     return (starting_epsilon - finishing_epsilon) / episode_count
+
+
+# Calculates return of episode
+def get_returns(*, episode, discount_rate):
+    returns = []
+    for (idx, event) in enumerate(reversed(episode)):
+        reward = event[2]
+        if idx == 0:
+            returns.append(reward)
+        else:
+            returns.append(reward + returns[idx - 1] * discount_rate)
+    # Need to reverse list as we calculated them backwards
+    returns.reverse()
+    return returns
